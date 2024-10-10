@@ -12,7 +12,9 @@ Especificações: SoC RK3329 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
 
 # RK3329 GPIO 
 São 4 controladores GPIO totalizando 128 pinos. Alguns pinos tem utilização pre-definida para acesar dispositivos como flash, MMC, Wifi, HDMI etc. 
-Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mateus Morais Aguirre, orientado pelo Prof. Dr. Claudio Afonso Fleury, uma busca por pinos GPIO foi realizada (script testgpio.py). Para essa placa, foram identificados alguns pinos disponíveis, conforme tabela a seguir 
+Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mateus Morais Aguirre, orientado pelo Prof. Dr. Claudio Afonso Fleury, uma busca por pinos GPIO foi realizada (script [testgpio.py](Examples/testgpio.py)).
+
+Para essa placa, foram identificados alguns pinos disponíveis, conforme tabela a seguir 
 
 | GPIO          | Descrição     |
 | ------------- | ------------- |
@@ -32,7 +34,7 @@ Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mat
 *As portas MMC1 podem ser utilizadas pois a placa utiliza somente o MMC0 que é o slot de cartão SD. A localização de cada um dos pinos é apresentada na figura abaixo.
 ![screenshot](Xplus_INschematic.png)
 
-Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso aos demais pinos foi utilizado os furos existentes na placa, que foi identificado que não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que nessa solução não foi utilizado).
+Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso aos demais pinos foram reutilizados furos existentes na placa, pois aparentemente não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que não possui CI soldado).
 Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos externos.
 
 ![screenshot](xplus_pins.jpg)
@@ -88,11 +90,12 @@ pip install adafruit_blinka
 pip install gpiod
 ```
 
-*Para fazer a instalação sem utilizar um ambiente virtual é necessário usar a opção --break-system-packages na frente do pip. Ex: pip install --break-system-packages
+*Para fazer a instalação sem utilizar um ambiente virtual é necessário usar a opção `--break-system-packages` no comando `pip`. Ex: `pip install --break-system-packages`
 
 ### Led Blink 
 Conexão
 GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
+
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/blink_LED.jpg" width="300" height="300">
 
 
@@ -100,7 +103,7 @@ GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
 Código python [blink.py](Examples/blink.py)
 
 
-O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os 128 pinos da RK3329 (é importante notar que a funcionalidade das portas entre RK3328 e RK3329 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas 
+O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os mesmos 128 pinos da RK3329 (é importante notar que a funcionalidade das portas entre RK3328 e RK3329 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas) 
 
 ```
 import os
@@ -116,13 +119,18 @@ from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 Na documentação do RK3329 a codificação de portas segue a seguinte nomenclatura:
 
 GPIO(X1)_(X2)(X3)		
+
+Número do GPIO = 32 ∗ X1 + 8 ∗ X2 + X3.	
+
 valores: A = 0, B = 1, C = 2 e D = 3.
 
-Número do GPIO = 32 ∗ X1 + 8 ∗ X2 + X3.		
-Ex: GPIO1_B2
+Ex: 
+```
+GPIO1_B2
 num= 32*1 + 1*8 + 2
 num = 42
-No blinka a codificação segue o padrão (chip, porta). Para transformar nessa codificação, basta apenas somar o 8*X2 + X3, e usar como seguindo termo. Assim a porta 42 é instanciada assim `pin = Pin((1,10))`
+```
+No blinka a codificação segue o padrão (chip, porta). Para transformar nessa codificação, basta apenas somar o `8*X2 + X3`, e usar no segundo parametro. Assim a porta 42 é instanciada assim `pin = Pin((1,10))`
 
 
 ```
@@ -147,7 +155,8 @@ Para executar
 
 
 ### Conexão i2c
-O rk3329 tem 4 controladores I2C. Os pinos que temos acesso é do controlar 0, nas portas (SCL), 1 (SDA) do controlador 0 (ver figura acima).
+O rk3329 tem 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
+
 Habilitando o controlador i2c no dtb
 
 ```
@@ -168,7 +177,7 @@ Editar o arquivo rk3322x-box.dts e habilitar o controlador I2C_0, trocando o dis
                 clocks = <0x02 0x14c>;
                 pinctrl-names = "default";
                 pinctrl-0 = <0x29>;
-                **status = "okay";**
+                status = "okay";
                 phandle = <0x78>;
         };
 ```
@@ -192,7 +201,7 @@ apt install i2c-tools
 i2cdetect -y 0
 ```
 
-Exemplo de saida para o display OLED (Endereco 0x3c e BMP280 0x76)
+Exemplo de saida para o display OLED (Endereco 0x3c) e BMP280 (0x76)
 
 ```
 (.env) root@rk322x-box:~/rk3329# i2cdetect -y 0
@@ -208,9 +217,10 @@ Exemplo de saida para o display OLED (Endereco 0x3c e BMP280 0x76)
 ```
 
 - Editar a board, para considerar os pinos I2C corretos (ver TODO)
+  
 `cd .env/lib/python3.11/site-packages/adafruit_blinka/microcontroller/rockchip/rk3328/`
 
-editar o arquivo pin.py
+- Editar o arquivo pin.py
 
 ```
 # I2C
@@ -231,6 +241,7 @@ i2cPorts = ((0, I2C0_SCL, I2C0_SDA),)
 
 
 ### Instalar o circuitpython-ssd1306 
+
 OLED 
 
 ```
@@ -240,6 +251,7 @@ pip install adafruit-circuitpython-ssd1306
 ```
 
 Para testar, utilize o código [oled.py](Examples/oled.py)
+
 `python oled.py`
 
 ### Instalar o circuitpython-bmp280
@@ -248,29 +260,48 @@ BMP280 - Temperatura e pressão
 `pip install adafruit-circuitpython-bmp280`
 
 Para testar, utilize o código [bmptest.py](Examples/bmptest.py)
+
 `python bmptest.py`
 
 
 - Leitura dos dados do BMP e apresentando no display
+- 
 Código [displaybmp.py](Examples/displaybmp.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
 
 ### Enviando dados para o Thinkspeak
-Criar um canal no Thinkspeak
+Criar um canal no [Thinkspeak](https://thingspeak.mathworks.com/) 
 
 Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="300" height="300">
 
 
+# NOT WORKING YET
+A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores usam um protocolo bem especifico por exemplo o sensor de temperatura e umidade DHT que utiliza um protocolo de 1 pino específico. O protocolo necessita de leitura na faixa dos us, o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
+
+pip install adafruit-circuitpython-dht
+
+Nos testes realizados a maioria das vezes a leitura dava erro ([dht.py](Examples/dht.py). Algumas leituras foram bem sucedidas (menos de 1%), mesmo colocando o scaling_governor no modo performance (frequência máxima de operação)] e "pinando" a execução em um núcleo específico. Isso demonstra que o problema está no desempenho do SoC.
+
+```
+cd /sys/devices/system/cpu/cpu1/cpufreq
+echo performance > scaling_governor
+```
+
+Executando no core 1
+
+`taskset 0x2 python dht.py`
 
 
 
 # TODO
-- Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem necessidade de alterar diretamente na Blinka
-- Criar um sistema para executar o framework Arduino
+- Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem a necessidade de alterar o mapeamento de uma placa diferente
+- Fazer testes com outros dispositivos como botões, interrupções, etc
 - Melhorar o código do DHT (possivelmente utilizando a linguagem C)  
+- Mapear o framework Arduino para a solução ? 
+
 
 
 
