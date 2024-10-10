@@ -93,6 +93,8 @@ pip install gpiod
 ### Led Blink 
 Conexão
 GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
+![screenshot](screenshots/Blink_led.jpg)
+
 Código python [blink.py](Examples/blink.py)
 
 
@@ -241,6 +243,16 @@ Para testar, utilize o código [oled.py](Examples/oled.py)
 ### Instalar o circuitpython-bmp280
 BMP280 - Temperatura e pressão
 
+`pip install adafruit-circuitpython-bmp280`
+
+Para testar, utilize o código [bmptest.py](Examples/bmptest.py)
+`python bmptest.py`
+
+
+- Leitura dos dados do BMP e apresentando no display
+Código [displaybmp.py](Examples/displaybmp.py)
+
+![screenshot](screenshots/displaybmp.jpg)
 
 # TODO
 - Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem necessidade de alterar diretamente na Blinka
