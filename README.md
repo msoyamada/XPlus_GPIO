@@ -34,6 +34,6 @@ Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mat
 Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso aos demais pinos foi utilizado os furos existentes na placa, que foi identificado que não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que nessa solução não foi utilizado).
 Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos externos.
 
-![screenshot](xplus_pins.png)
+![screenshot](xplus_pins.jpg)
 
 
