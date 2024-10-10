@@ -93,7 +93,9 @@ pip install gpiod
 ### Led Blink 
 Conexão
 GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
-![screenshot](screenshots/Blink_led.jpg)
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/blink_LED.jpg" width="300" height="300">
+
+
 
 Código python [blink.py](Examples/blink.py)
 
@@ -252,7 +254,8 @@ Para testar, utilize o código [bmptest.py](Examples/bmptest.py)
 - Leitura dos dados do BMP e apresentando no display
 Código [displaybmp.py](Examples/displaybmp.py)
 
-![screenshot](screenshots/displaybmp.jpg)
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
+
 
 # TODO
 - Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem necessidade de alterar diretamente na Blinka
