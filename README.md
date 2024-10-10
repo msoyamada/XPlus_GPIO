@@ -8,10 +8,10 @@ Imagem utilizada neste tutorial: https://armbian.hosthatch.com/archive/rk322x-bo
 *No teste foi utilizada a imagem Armbian_24.2.5_Rk322x-box_bookworm
 
 # TVBox  In XPlus
-Especificações: SoC RK3329 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
+Especificações: SoC RK3229 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
 ![screenshot](inxplus.jpeg)
 
-# RK3329 GPIO 
+# RK3229 GPIO 
 São 4 controladores GPIO totalizando 128 pinos. Alguns pinos tem utilização pre-definida para acessar dispositivos como flash, MMC, Wifi, HDMI etc. 
 Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mateus Morais Aguirre, orientado pelo Prof. Dr. Claudio Afonso Fleury, uma busca por portas GPIO foi realizada (script [testgpio.py](Examples/testgpio.py)).
 
