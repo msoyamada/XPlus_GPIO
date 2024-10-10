@@ -1,0 +1,17 @@
+.pio
+.pioenvs
+.piolibdeps
+.vscode
+.travis.yml
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+.vscode/launch.json
+.vscode/*.db
+.vscode/.browse.c_cpp.db*
+.clang_complete
+.gcc-flags.json
+shared/loraconf.h
+shared/ota.conf
+platformio.ini
+shared/paxcounter.conf
+Examples/secrets.py

@@ -16,8 +16,14 @@ from PIL import Image, ImageDraw, ImageFont
 # Import the SSD1306 module.
 import adafruit_ssd1306
 
-
 import adafruit_bmp280
+
+# thingspeak
+import thingspeak
+import secrets as thinkspeak  
+
+
+channel = thingspeak.Channel(id=thinkspeak.channel_id, api_key=thinkspeak.write_key)
 
 # Create sensor object, communicating over the board's default I2C bus
 
@@ -32,7 +38,7 @@ bmp280.sea_level_pressure = 1013.25
 display.fill(0)
 
 display.show()
-
+count= 0
 while (True):
     image = Image.new("1", (128, 32))
     draw = ImageDraw.Draw(image)
@@ -43,4 +49,7 @@ while (True):
     display.fill(0)
     display.image(image)
     display.show()
-    time.sleep(5)
+    if (count == 0):
+        response = channel.update({1: bmp280.temperature, 2: bmp280.pressure, 3: bmp280.altitude})
+    count = (count +1) % 6
+    time.sleep(10)
