@@ -144,7 +144,98 @@ Para executar
 
 ### Conexão i2c
 O rk3329 tem 4 controladores I2C. Os pinos que temos acesso é do controlar 0, nas portas (SCL), 1 (SDA) do controlador 0 (ver figura acima).
-Habilitando o controlador i2c
+Habilitando o controlador i2c no dtb
+
+```
+cd /boot
+dtc -I dtb -O dts dtb/rk322x-box.dtb > rk322x-box.dts
+```
+
+Editar o arquivo rk3322x-box.dts e habilitar o controlador I2C_0, trocando o disable por okay no campo status.
+
+```
+       i2c@11050000 {
+                compatible = "rockchip,rk3228-i2c";
+                reg = <0x11050000 0x1000>;
+                interrupts = <0x00 0x24 0x04>;
+                #address-cells = <0x01>;
+                #size-cells = <0x00>;
+                clock-names = "i2c";
+                clocks = <0x02 0x14c>;
+                pinctrl-names = "default";
+                pinctrl-0 = <0x29>;
+                **status = "okay";**
+                phandle = <0x78>;
+        };
+```
+
+gerar o novo dtbdtb/rk322x-box.dtb  
+
+`dtc -I dts -O dtb rk322x-box.dts -o dtb/myrk3222x-box.dtb`
+
+editar o arquivo /boot/armbianEnv.txt, o campo fdtfile
+
+`fdtfile=myrk322x-box.dtb`
+
+reiniciar a placa
+
+
+
+Conectar um dispositivo i2c no barramento e verificar se ele será encontrado
+
+```
+apt install i2c-tools
+i2cdetect -y 0
+```
+
+Exemplo de saida para o display OLED (Endereco 0x3c e BMP280 0x76)
+
+```
+(.env) root@rk322x-box:~/rk3329# i2cdetect -y 0
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:                         -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- 3c -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- 76 --
+```
+
+- Editar a board, para considerar os pinos I2C corretos (ver TODO)
+`cd .env/lib/python3.11/site-packages/adafruit_blinka/microcontroller/rockchip/rk3328/`
+
+editar o arquivo pin.py
+
+```
+# I2C
+I2C0_SDA = GPIO0_A1
+I2C0_SCL = GPIO0_A0
+#I2C1_SDA = GPIO2_A4
+#I2C1_SCL = GPIO2_A5
+
+
+...
+...
+...
+
+# ordered as i2cId, SCL, SDA
+#i2cPorts = ((0, I2C1_SCL, I2C1_SDA),)
+i2cPorts = ((0, I2C0_SCL, I2C0_SDA),)
+```
+
+
+Instalar o circuitpython-ssd1306 
+```
+apt install libjpeg-dev
+pip install pillow 
+pip install adafruit-circuitpython-ssd1306 
+```
+
+# TODO
+- Criar o proprio board e chip para a TVBOX, facilitando o mapeamento dos pinos
+
 
 
 
