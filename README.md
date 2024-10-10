@@ -11,7 +11,7 @@ Especificações: SoC RK3329 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
 
 # RK3329 GPIO 
 São 4 controladores GPIO totalizando 128 pinos. Alguns pinos tem utilização pre-definida para acesar dispositivos como flash, MMC, Wifi, HDMI etc. 
-Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mateuss Morais Aguirre, orientado pelo Prof. Dr. Claudio Afonso Fleury, uma busca por pinos GPIO foi realizada. Para essa placa, foram identificados alguns pinos disponíveis, conforme tabela a seguir 
+Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mateus Morais Aguirre, orientado pelo Prof. Dr. Claudio Afonso Fleury, uma busca por pinos GPIO foi realizada (script testgpio.py). Para essa placa, foram identificados alguns pinos disponíveis, conforme tabela a seguir 
 
 | GPIO          | Descrição     |
 | ------------- | ------------- |
@@ -35,5 +35,23 @@ Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os 
 Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos externos.
 
 ![screenshot](xplus_pins.jpg)
+
+# Software
+É possível fazer o acesso ao GPIO diretamente:
+
+`cd /sys/class/gpio`
+
+`echo 41 > export`
+
+`cd gpio41`
+
+`echo out > direction`
+
+`echo 0 > value`
+
+`echo 1 > value`
+
+
+
 
 
