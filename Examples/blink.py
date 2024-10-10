@@ -1,6 +1,6 @@
 import os
 
-os.environ["BLINKA_FORCEBOARD"]="GENERIC_LINUX_PC"
+os.environ["BLINKA_FORCEBOARD"]="ROC-RK3328-CC"
 os.environ["BLINKA_FORCECHIP"]="RK3328"
 
 import time
