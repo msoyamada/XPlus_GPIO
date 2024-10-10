@@ -297,7 +297,7 @@ Executando no core 1
 
 
 # TODO
-- Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem a necessidade de alterar o mapeamento de uma placa diferente
+- Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem a necessidade de alterar o mapeamento de uma placa diferente. Vai necessitar alterar o código do pacote adafruit-platformdetector.
 - Fazer testes com outros dispositivos como botões, interrupções, etc
 - Melhorar o código do DHT (possivelmente utilizando a linguagem C)  
 - Mapear o framework Arduino para a solução ? 
