@@ -75,8 +75,10 @@ Criar um ambiente virtual python
 ```
 mkdir rk3329 && cd rk3329
 python -m venv .env
-source .env/bin/activate (nas proximas utilizacoes, utilizar somente esse comando)
+source .env/bin/activate 
 ```
+**Nao esquecer de dar um `source .env/bin/activate` a cada inicialização da placa**
+
 
 Instalar os pacotes python
 ```
@@ -91,10 +93,11 @@ pip install gpiod
 ### Led Blink 
 Conexão
 GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
-Código python [blink.py](blink.py)
+Código python [blink.py](Examples/blink.py)
 
 
-* O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os 128 pinos da RK3329 (é importante notar que o mapeamento entre RK3328 e RK3329 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas 
+O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os 128 pinos da RK3329 (é importante notar que a funcionalidade das portas entre RK3328 e RK3329 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas 
+
 ```
 import os
 os.environ["BLINKA_FORCEBOARD"]="ROC-RK3328-CC"
@@ -106,25 +109,45 @@ import digitalio
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 ```
 
+Na documentação do RK3329 a codificação de portas segue a seguinte nomenclatura:
 
+GPIO(X1)_(X2)(X3)		
+valores: A = 0, B = 1, C = 2 e D = 3.
+
+Número do GPIO = 32 ∗ X1 + 8 ∗ X2 + X3.		
+Ex: GPIO1_B2
+num= 32*1 + 1*8 + 2
+num = 42
+No blinka a codificação segue o padrão (chip, porta). Para transformar nessa codificação, basta apenas somar o 8*X2 + X3, e usar como seguindo termo. Assim a porta 42 é instanciada assim `pin = Pin((1,10))`
+
+
+```
 pin = Pin((1,10))  # (x,y) = 32*x + 10*y  -> 1*32 + 10 = 42 (GPIO 42)
-
-print("hello blinky!")
-
 led = digitalio.DigitalInOut(pin)
 led.direction = digitalio.Direction.OUTPUT
+```
 
+Escrevendo na porta
+```
 while True:
     led.value = True
     time.sleep(0.5)
     led.value = False
     time.sleep(0.5)
-
 ```
 
-Definir
 
 Para executar 
-python blink.py
+
+`python blink.py`
+
+
+### Conexão i2c
+O rk3329 tem 4 controladores I2C. Os pinos que temos acesso é do controlar 0, nas portas (SCL), 1 (SDA) do controlador 0 (ver figura acima).
+Habilitando o controlador i2c
+
+
+
+
 
 
