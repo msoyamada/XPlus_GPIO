@@ -52,6 +52,78 @@ Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos e
 `echo 1 > value`
 
 
+## Blinka 
+Blinka: Blinka brings CircuitPython APIs and, therefore, CircuitPython libraries to single board computers (SBCs). https://circuitpython.org/blinka
 
+Popular na Raspberry, possibilita o acesso nas portas GPIO. Possui também uma vasta biblioteca de acesso a placas via I2C.
+
+
+Instalação de pacotes
+```
+apt install gcc
+apt install python3-pip
+apt install python3-venv
+apt install python3-dev
+apt install python3-libgpiod
+apt install libgpiod2
+apt install libgpiod-dev
+update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+```
+
+Criar um ambiente virtual python
+```
+mkdir rk3329 && cd rk3329
+python -m venv .env
+source .env/bin/activate (nas proximas utilizacoes, utilizar somente esse comando)
+```
+
+Instalar os pacotes python
+```
+pip install click 
+pip install adafruit-python-shell 
+pip install adafruit_blinka 
+pip install gpiod
+```
+
+*Para fazer a instalação sem utilizar um ambiente virtual é necessário usar a opção --break-system-packages na frente do pip. Ex: pip install --break-system-packages
+
+### Led Blink 
+Conexão
+GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
+Código python [blink.py](blink.py)
+
+
+* O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os 128 pinos da RK3329 (é importante notar que o mapeamento entre RK3328 e RK3329 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas 
+```
+import os
+os.environ["BLINKA_FORCEBOARD"]="ROC-RK3328-CC"
+os.environ["BLINKA_FORCECHIP"]="RK3328"
+
+import time
+import board
+import digitalio
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
+```
+
+
+pin = Pin((1,10))  # (x,y) = 32*x + 10*y  -> 1*32 + 10 = 42 (GPIO 42)
+
+print("hello blinky!")
+
+led = digitalio.DigitalInOut(pin)
+led.direction = digitalio.Direction.OUTPUT
+
+while True:
+    led.value = True
+    time.sleep(0.5)
+    led.value = False
+    time.sleep(0.5)
+
+```
+
+Definir
+
+Para executar 
+python blink.py
 
 
