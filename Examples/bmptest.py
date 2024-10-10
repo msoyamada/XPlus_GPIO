@@ -12,10 +12,6 @@ from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 import busio
 
-from PIL import Image, ImageDraw, ImageFont
-# Import the SSD1306 module.
-import adafruit_ssd1306
-
 
 # Create the I2C interface.
 i2c = busio.I2C(Pin((0,0)), Pin((0,1)))
