@@ -283,7 +283,7 @@ A biblioteca CircuitPython está funcionando para os dispositivos testados. No e
 
 pip install adafruit-circuitpython-dht
 
-Nos testes realizados a maioria das vezes a leitura dava erro ([dht.py](Examples/dht.py). Algumas leituras foram bem sucedidas (menos de 1%), mesmo colocando o scaling_governor no modo performance (frequência máxima de operação)] e "pinando" a execução em um núcleo específico. Isso demonstra que o problema está no desempenho do SoC.
+Nos testes realizados a maioria das vezes a leitura retorna um erro por falta de dados ([dht.py](Examples/dht.py)). Algumas leituras foram bem sucedidas (menos de 1%), mesmo colocando o scaling_governor no modo performance (frequência máxima de operação)] e "pinando" a execução em um núcleo específico. Isso demonstra que o problema está no desempenho do SoC.
 
 ```
 cd /sys/devices/system/cpu/cpu1/cpufreq
