@@ -1,5 +1,6 @@
 # In XPlus_GPIO
-Refactoring the XPlus TVBOX to access the GPIO
+Refactoring the XPlus TVBOX to access the GPIO.
+UNIOESTE - Campus Cascavel.
 
 # Instalar o Armbian utilizando a ferramenta multitool
 Imagem utilizada neste tutorial: https://armbian.hosthatch.com/archive/rk322x-box/archive/
