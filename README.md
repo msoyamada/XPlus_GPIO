@@ -256,6 +256,16 @@ Código [displaybmp.py](Examples/displaybmp.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
 
+### Enviando dados para o Thinkspeak
+Criar um canal no Thinkspeak
+
+Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
+
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="300" height="300">
+
+
+
+
 
 # TODO
 - Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem necessidade de alterar diretamente na Blinka
