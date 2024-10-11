@@ -284,6 +284,78 @@ Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="500" height="300">
 
 
+### Leitura da GPIO
+Algumas portas do RK3228 tem resistores pull up ou down que podem ser programados em software. Procurar no datasheet, se é possível programar a porta que o botão está conectado. Caso não seja possível, é necessário colocar um resistor pull up ou pull down no circuito.
+
+Código [readpin.py](Examples/readpin.py)
+
+
+```
+import os
+os.environ["BLINKA_FORCEBOARD"]="ROC-RK3328-CC"
+os.environ["BLINKA_FORCECHIP"]="RK3328"
+import time
+import board
+import digitalio
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
+
+pin = Pin((3,3))  ## Pin 99
+pinled = Pin((1,10))  ## Pin 42
+
+button = digitalio.DigitalInOut(pin)
+button.direction = digitalio.Direction.INPUT
+button.pull = digitalio.Pull.UP
+
+led = digitalio.DigitalInOut(pinled)
+led.direction = digitalio.Direction.OUTPUT
+
+while True:
+    led.value = button.value
+    #print(button.value)
+    time.sleep(0.1)
+```
+
+### Leitura do botão utilizando o componente keypad
+
+
+```
+import os
+
+os.environ["BLINKA_FORCEBOARD"]="ROC-RK3328-CC"
+os.environ["BLINKA_FORCECHIP"]="RK3328"
+
+import time
+import board
+import digitalio
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
+
+import keypad
+button=Pin((3,3)) #Pin 99
+keys = keypad.Keys((button,), value_when_pressed=False, pull=True)
+
+while True:
+    event = keys.events.get()
+    # event will be None if nothing has happened.
+    if event:
+        print(event)
+``` 
+
+# Sugestões
+- Instalando interface gráfica (caso ainda não esteja instalada)
+
+`apt install xfce lightdm xorg`
+
+- Interface gráfica no python
+  
+Existe várias bibliotecas. Uma sugestão é [PySimpleGUI](https://www.pysimplegui.com/) 
+
+
+`apt install python3-tk`
+
+`pip install pysimplegui`
+
+
+
 # NOT WORKING YET
 A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
 
