@@ -35,7 +35,7 @@ Para essa placa, foram identificados algumas portas disponíveis, conforme tabel
 *As portas MMC1 podem ser utilizadas pois a placa utiliza somente o MMC0 que é o slot de cartão SD. A localização de cada um dos pinos é apresentada na figura abaixo.
 ![screenshot](Xplus_INschematic.png)
 
-Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso aos demais pinos foram reutilizados furos existentes na placa, pois aparentemente não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que não possui CI soldado).
+Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso as demais portas foram reutilizados furos existentes na placa, pois aparentemente não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que não possui CI soldado).
 Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos externos.
 
 ![screenshot](xplus_pins.jpg)
@@ -76,7 +76,7 @@ update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 Criar um ambiente virtual python
 ```
-mkdir rk3329 && cd rk3329
+mkdir rk3229 && cd rk3229
 python -m venv .env
 source .env/bin/activate 
 ```
@@ -104,7 +104,7 @@ GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
 Código python [blink.py](Examples/blink.py)
 
 
-O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os mesmos 128 pinos da RK3329 (é importante notar que a funcionalidade das portas entre RK3328 e RK3329 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas) 
+O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os mesmos 128 pinos da RK3229 (é importante notar que a funcionalidade das portas entre RK3328 e RK3229 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas) 
 
 ```
 import os
@@ -156,7 +156,7 @@ Para executar
 
 
 ### Conexão i2c
-O rk3329 tem 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
+O rk3229 possii 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
 
 Habilitando o controlador i2c no dtb
 
@@ -165,7 +165,7 @@ cd /boot
 dtc -I dtb -O dts dtb/rk322x-box.dtb > rk322x-box.dts
 ```
 
-Editar o arquivo rk3322x-box.dts e habilitar o controlador I2C_0, trocando o disable por okay no campo status.
+Editar o arquivo rk3222x-box.dts e habilitar o controlador I2C_0, trocando o disable por okay no campo status.
 
 ```
        i2c@11050000 {
@@ -205,7 +205,7 @@ i2cdetect -y 0
 Exemplo de saida para o display OLED (Endereco 0x3c) e BMP280 (0x76)
 
 ```
-(.env) root@rk322x-box:~/rk3329# i2cdetect -y 0
+(.env) root@rk322x-box:~/rk3229# i2cdetect -y 0
      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
 00:                         -- -- -- -- -- -- -- --
 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -280,11 +280,11 @@ Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
 
 
 # NOT WORKING YET
-A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores usam um protocolo bem especifico por exemplo o sensor de temperatura e umidade DHT que utiliza um protocolo de 1 pino específico. O protocolo necessita de leitura na faixa dos us, o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
+A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores usam um protocolo bem especifico por exemplo o sensor de temperatura e umidade DHT que utiliza um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us, o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
 
 pip install adafruit-circuitpython-dht
 
-Nos testes realizados a maioria das vezes a leitura retorna um erro por falta de dados ([dht.py](Examples/dht.py)). Algumas leituras foram bem sucedidas (menos de 1%), mesmo colocando o scaling_governor no modo performance (frequência máxima de operação)] e "pinando" a execução em um núcleo específico. Isso demonstra que o problema está no desempenho do SoC.
+Nos testes realizados a maioria das vezes a leitura retorna um erro por falta de dados ([dht.py](Examples/dht.py)). Algumas leituras foram bem sucedidas (menos de 1%), mesmo colocando o scaling_governor no modo performance (frequência máxima de operação)] e "pinando" a execução em um núcleo específico. Isso sugere que o problema está no desempenho do SoC.
 
 ```
 cd /sys/devices/system/cpu/cpu1/cpufreq
