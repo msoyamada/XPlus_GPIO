@@ -35,10 +35,15 @@ Para essa placa, foram identificados algumas portas disponíveis, conforme tabel
 *As portas MMC1 podem ser utilizadas pois a placa utiliza somente o MMC0 que é o slot de cartão SD. A localização de cada um dos pinos é apresentada na figura abaixo.
 ![screenshot](Xplus_INschematic.png)
 
-Para acessar o GPIO foram soldados fios esmaltados (utilizados para jumper). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso as demais portas foram reutilizados furos existentes na placa, pois aparentemente não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que não possui CI soldado).
+Para acessar o GPIO, foi realizada a solda utilizando fios esmaltados (muito utilizados para fazer jumper em PCB). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso as demais portas foi reutilizado furos existentes na placa, pois aparentemente não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que não possui CI soldado). Para esse teste apenas os pinos 96 e 99 foram soldados, sendo que os demais podem ser utilizados conforme a necessidade do projeto. 
 Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos externos.
 
 ![screenshot](xplus_pins.jpg)
+
+![screenshot](GPIOfront.png)
+
+![screenshot](GPIOback.jpg)
+
 
 # Software
 É possível fazer o acesso ao GPIO diretamente:
@@ -117,7 +122,7 @@ import digitalio
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 ```
 
-Na documentação do RK3329 a codificação de portas segue a seguinte nomenclatura:
+Na documentação do RK3229 a codificação de portas segue a seguinte nomenclatura:
 
 GPIO(X1)_(X2)(X3)		
 
@@ -266,25 +271,25 @@ Para testar, utilize o código [bmptest.py](Examples/bmptest.py)
 
 
 - Leitura dos dados do BMP e apresentando no display
-- 
+ 
 Código [displaybmp.py](Examples/displaybmp.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
 
-### Enviando dados para o Thinkspeak
+### Enviando dados para a nuvem (Thingspeak)
 Criar um canal no [Thinkspeak](https://thingspeak.mathworks.com/) 
 
 Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
 
-<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="300" height="300">
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="500" height="300">
 
 
 # NOT WORKING YET
-A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores usam um protocolo bem especifico por exemplo o sensor de temperatura e umidade DHT que utiliza um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us, o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
+A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
 
 pip install adafruit-circuitpython-dht
 
-Nos testes realizados a maioria das vezes a leitura retorna um erro por falta de dados ([dht.py](Examples/dht.py)). Algumas leituras foram bem sucedidas (menos de 1%), mesmo colocando o scaling_governor no modo performance (frequência máxima de operação)] e "pinando" a execução em um núcleo específico. Isso sugere que o problema está no desempenho do SoC.
+Nos testes realizados a maioria das vezes a leitura retorna um erro por falta de dados ([dht.py](Examples/dht.py)). Colocando o scaling_governor no modo performance (frequência máxima de operação) e "pinando" a execução em um núcleo específico, algumas leituras foram bem sucedidas (menos de 10%). Isso sugere que o problema está no desempenho do SoC.
 
 ```
 cd /sys/devices/system/cpu/cpu1/cpufreq
