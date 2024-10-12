@@ -11,7 +11,7 @@ Ciência da Computação - Campus Cascavel
 # Instalar o Armbian utilizando a ferramenta multitool
 Imagem utilizada neste tutorial: https://armbian.hosthatch.com/archive/rk322x-box/archive/
 
-*No teste foi utilizada a imagem Armbian_24.2.5_Rk322x-box_bookworm
+*No teste foi utilizada a imagem Armbian_24.11_Rk322x-box_bookworm, provavelmente funcionará em versões mais novas.
 
 # TVBox  In XPlus
 Especificações: SoC RK3229 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
@@ -363,7 +363,7 @@ Existe várias bibliotecas. Uma sugestão é [PySimpleGUI](https://www.pysimpleg
 
 
 # NOT WORKING YET
-A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
+A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT utiliza um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
 
 pip install adafruit-circuitpython-dht
 
