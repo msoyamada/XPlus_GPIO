@@ -1,6 +1,12 @@
 # In XPlus_GPIO
 Refactoring the XPlus TVBOX to access the GPIO.
-UNIOESTE - Campus Cascavel.
+
+
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/logo-unioeste-png-rgb.png" width="270" height="95"> 
+
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/LogoCC-Copia.png" width="100" height="97">
+Ciência da Computação - Campus Cascavel
+
 
 # Instalar o Armbian utilizando a ferramenta multitool
 Imagem utilizada neste tutorial: https://armbian.hosthatch.com/archive/rk322x-box/archive/
@@ -161,7 +167,7 @@ Para executar
 
 
 ### Conexão i2c
-O rk3229 possii 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
+O rk3229 possui 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
 
 Habilitando o controlador i2c no dtb
 
@@ -277,9 +283,9 @@ Código [displaybmp.py](Examples/displaybmp.py)
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
 
 ### Enviando dados para a nuvem (Thingspeak)
-Criar um canal no [Thinkspeak](https://thingspeak.mathworks.com/) 
+Criar um canal no [Thingspeak](https://thingspeak.mathworks.com/) 
 
-Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
+Código [displaybmp_thingspeak.py](Examples/displaybmp_thinkspeak.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="500" height="300">
 
