@@ -1,11 +1,17 @@
 # In XPlus_GPIO
 Refactoring the XPlus TVBOX to access the GPIO.
-UNIOESTE - Campus Cascavel.
+
+
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/logo-unioeste-png-rgb.png" width="270" height="95"> 
+
+<img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/LogoCC-Copia.png" width="100" height="97">
+Ciência da Computação - Campus Cascavel
+
 
 # Instalar o Armbian utilizando a ferramenta multitool
 Imagem utilizada neste tutorial: https://armbian.hosthatch.com/archive/rk322x-box/archive/
 
-*No teste foi utilizada a imagem Armbian_24.2.5_Rk322x-box_bookworm
+*No teste foi utilizada a imagem Armbian_24.11_Rk322x-box_bookworm, provavelmente funcionará em versões mais novas.
 
 # TVBox  In XPlus
 Especificações: SoC RK3229 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
@@ -161,7 +167,7 @@ Para executar
 
 
 ### Conexão i2c
-O rk3229 possii 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
+O rk3229 possui 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
 
 Habilitando o controlador i2c no dtb
 
@@ -277,9 +283,9 @@ Código [displaybmp.py](Examples/displaybmp.py)
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
 
 ### Enviando dados para a nuvem (Thingspeak)
-Criar um canal no [Thinkspeak](https://thingspeak.mathworks.com/) 
+Criar um canal no [Thingspeak](https://thingspeak.mathworks.com/) 
 
-Código [displaybmp_thinkspeak.py](Examples/displaybmp_thinkspeak.py)
+Código [displaybmp_thingspeak.py](Examples/displaybmp_thinkspeak.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="500" height="300">
 
@@ -357,7 +363,7 @@ Existe várias bibliotecas. Uma sugestão é [PySimpleGUI](https://www.pysimpleg
 
 
 # NOT WORKING YET
-A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
+A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT utiliza um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
 
 pip install adafruit-circuitpython-dht
 
