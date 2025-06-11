@@ -8,20 +8,20 @@ Refactoring the XPlus TVBOX to access the GPIO.
 Ciência da Computação - Campus Cascavel
 
 
-# Instalar o Armbian utilizando a ferramenta multitool
-Imagem utilizada neste tutorial: https://armbian.hosthatch.com/archive/rk322x-box/archive/
+# Install the Armbian using the multitool
+RK322x tvbox image: https://armbian.hosthatch.com/archive/rk322x-box/archive/
 
-*No teste foi utilizada a imagem Armbian_24.11_Rk322x-box_bookworm, provavelmente funcionará em versões mais novas.
+*In this test the Armbian_24.11_Rk322x-box_bookworm was used (probably it will work in the newer version)
 
 # TVBox  In XPlus
-Especificações: SoC RK3229 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
+Specs: SoC RK3229 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
 ![screenshot](inxplus.jpeg)
 
 # RK3229 GPIO 
-São 4 controladores GPIO totalizando 128 pinos. Alguns pinos tem utilização pre-definida para acessar dispositivos como flash, MMC, Wifi, HDMI etc. 
-Baseado no trabalho do Instituto Federal de Goiás - Campus Goiânia, Aluno: Mateus Morais Aguirre, orientado pelo Prof. Dr. Claudio Afonso Fleury, uma busca por portas GPIO foi realizada (script [testgpio.py](Examples/testgpio.py)).
+It has 4 GPIO controllers, each one has 32 pins (128 pins in the total). Some pins are predefined to be used in the peripheral access like flash, MMC, Wifi, HDMI etc. 
+Based on the work developed in the  Instituto Federal de Goiás - Campus Goiânia by Mateus Morais Aguirre and Prof. Dr. Claudio Afonso Fleury, a search for IO ports was performed using the script  [testgpio.py](Examples/testgpio.py)).
 
-Para essa placa, foram identificados algumas portas disponíveis, conforme tabela a seguir 
+In this board, some GPIO ports are detected as presented in the Table below. 
 
 | GPIO          | Descrição     |
 | ------------- | ------------- |
@@ -38,11 +38,11 @@ Para essa placa, foram identificados algumas portas disponíveis, conforme tabel
 |102 |	GPIO3_A6/UART1_RTSN|
 |103 |	GPIO3_A7/UART1_CTSN|
 
-*As portas MMC1 podem ser utilizadas pois a placa utiliza somente o MMC0 que é o slot de cartão SD. A localização de cada um dos pinos é apresentada na figura abaixo.
+*The MMC1 ports can be used because the board used only the MMC0 controller for the SD card slot. The pins placement in the board is presented below.
 ![screenshot](Xplus_INschematic.png)
 
-Para acessar o GPIO, foi realizada a solda utilizando fios esmaltados (muito utilizados para fazer jumper em PCB). Os pinos GPIO 41 e 42 foram soldados diretamente pois a placa já contém os furos. Para facilitar o acesso as demais portas foi reutilizado furos existentes na placa, pois aparentemente não estão em uso (no PCB eles direcionam para um local com o diagrama de um chip, que não possui CI soldado). Para esse teste apenas os pinos 96 e 99 foram soldados, sendo que os demais podem ser utilizados conforme a necessidade do projeto. 
-Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos externos.
+To access the GPIO enemeled wires (often used in the jump on pcb) are used to facilitate the access to the ports. The GPIO 41 and 42 are soldered directly in the board, thanks to the holes already available in the board. To easing the access to the GPIO ports, a set of unused holes in the board was used (in the board, the holes are connected in a place where there is no soldered CI). In this test, only the pins 96 e 99 were soldered, and the others can be soldered as necessary. 
+The GND and 3V3 pins are alse identified to power the external circuits.
 
 ![screenshot](xplus_pins.jpg)
 
@@ -52,7 +52,7 @@ Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos e
 
 
 # Software
-É possível fazer o acesso ao GPIO diretamente:
+To access the GPIO, the sysfs can be used:
 
 `cd /sys/class/gpio`
 
@@ -69,11 +69,10 @@ Foi também identificado dois pinos GND e 3V3 para alimentação dos circuitos e
 
 ## Blinka 
 Blinka: Blinka brings CircuitPython APIs and, therefore, CircuitPython libraries to single board computers (SBCs). https://circuitpython.org/blinka
+Popular in Raspberry, this library enables the GPIO access. It has also a set of components to access I2C devices.
 
-Popular na Raspberry, possibilita o acesso nas portas GPIO. Possui também uma vasta biblioteca de acesso a placas via I2C.
 
-
-Instalação de pacotes
+Install the packages
 ```
 apt install gcc
 apt install python3-pip
@@ -85,16 +84,16 @@ apt install libgpiod-dev
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 ```
 
-Criar um ambiente virtual python
+Create a python virtual environment
 ```
 mkdir rk3229 && cd rk3229
 python -m venv .env
 source .env/bin/activate 
 ```
-**Nao esquecer de dar um `source .env/bin/activate` a cada inicialização da placa**
+**At each start, execute  `source .env/bin/activate` **
 
 
-Instalar os pacotes python
+Install the python packages
 ```
 pip install click 
 pip install adafruit-python-shell 
@@ -102,20 +101,19 @@ pip install adafruit_blinka
 pip install gpiod
 ```
 
-*Para fazer a instalação sem utilizar um ambiente virtual é necessário usar a opção `--break-system-packages` no comando `pip`. Ex: `pip install --break-system-packages`
+*To install the packages outside a virtual environment, use the parameter `--break-system-packages` in the `pip` command. Ex: `pip install --break-system-packages`
 
 ### Led Blink 
-Conexão
+Conection
 GPIO42 -> LED -> RESISTOR 220 Ohm -> GND
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/blink_LED.jpg" width="300" height="300">
 
 
 
-Código python [blink.py](Examples/blink.py)
+Python code [blink.py](Examples/blink.py)
 
-
-O blinka não possui um mapeamento específico para o TVBOX. Está sendo utilizado o RK3328, que possui também 4 chips GPIO, totalizando os mesmos 128 pinos da RK3229 (é importante notar que a funcionalidade das portas entre RK3328 e RK3229 é diferente, mas nesse caso como é acesso direto a porta GPIO, pode ser feito sem problemas) 
+The blinka does not have the pin mapping for TVBox devices. We are using the RK3328, it has also 4 GPIO chips and 128 pins.
 
 ```
 import os
@@ -128,13 +126,13 @@ import digitalio
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 ```
 
-Na documentação do RK3229 a codificação de portas segue a seguinte nomenclatura:
+In the RK3229 datasheet, the ports codification follows the pattern:
 
 GPIO(X1)_(X2)(X3)		
 
-Número do GPIO = 32 ∗ X1 + 8 ∗ X2 + X3.	
+GPIO = 32 ∗ X1 + 8 ∗ X2 + X3.	
 
-valores: A = 0, B = 1, C = 2 e D = 3.
+Values: A = 0, B = 1, C = 2 e D = 3.
 
 Ex: 
 ```
@@ -142,8 +140,7 @@ GPIO1_B2
 num= 32*1 + 1*8 + 2
 num = 42
 ```
-No blinka a codificação segue o padrão (chip, porta). Para transformar nessa codificação, basta apenas somar o `8*X2 + X3`, e usar no segundo parametro. Assim a porta 42 é instanciada assim `pin = Pin((1,10))`
-
+In the blinka, follows the pattern (chip, port). To use this codification, we just need to sum `8*X2 + X3`, and use as the second parameter. For instance, port 42 is instantiated as `pin = Pin((1,10))`
 
 ```
 pin = Pin((1,10))  # (x,y) = 32*x + 10*y  -> 1*32 + 10 = 42 (GPIO 42)
@@ -151,7 +148,7 @@ led = digitalio.DigitalInOut(pin)
 led.direction = digitalio.Direction.OUTPUT
 ```
 
-Escrevendo na porta
+Writing in the port 
 ```
 while True:
     led.value = True
@@ -161,22 +158,23 @@ while True:
 ```
 
 
-Para executar 
+Run 
 
 `python blink.py`
 
 
-### Conexão i2c
-O rk3229 possui 4 controladores I2C. Foi identificado os pinos do controlador 0, nas portas 0 (SCL), 1 (SDA) (ver figura acima).
+### I2C connection
+rk3229 has 4 I2C controllers. It was detected the controller 0, using the ports 0 (SCL) and 1 (SDA) (Figure above).
 
-Habilitando o controlador i2c no dtb
+Enabling the I2C controller in DTB
+
 
 ```
 cd /boot
 dtc -I dtb -O dts dtb/rk322x-box.dtb > rk322x-box.dts
 ```
 
-Editar o arquivo rk3222x-box.dts e habilitar o controlador I2C_0, trocando o disable por okay no campo status.
+Edit the file rk3222x-box.dts  and enable I2C_0, changing disable for ok in the status field.
 
 ```
        i2c@11050000 {
@@ -194,26 +192,27 @@ Editar o arquivo rk3222x-box.dts e habilitar o controlador I2C_0, trocando o dis
         };
 ```
 
-gerar o novo dtbdtb/rk322x-box.dtb  
+generate the new DTB dtb/rk322x-box.dtb  
 
 `dtc -I dts -O dtb rk322x-box.dts -o dtb/myrk3222x-box.dtb`
 
-editar o arquivo /boot/armbianEnv.txt, o campo fdtfile
+edit the file  /boot/armbianEnv.txt, field fdtfile
 
 `fdtfile=myrk322x-box.dtb`
 
-reiniciar a placa
+restart the board
 
 
 
-Conectar um dispositivo i2c no barramento e verificar se ele será encontrado
+
+To test, connect an I2C device in the SCL and SDA pins, and check if it will be find.
 
 ```
 apt install i2c-tools
 i2cdetect -y 0
 ```
 
-Exemplo de saida para o display OLED (Endereco 0x3c) e BMP280 (0x76)
+Output example with an OLED (Address 0x3c) e BMP280 (Address 0x76)
 
 ```
 (.env) root@rk322x-box:~/rk3229# i2cdetect -y 0
@@ -228,11 +227,11 @@ Exemplo de saida para o display OLED (Endereco 0x3c) e BMP280 (0x76)
 70: -- -- -- -- -- -- 76 --
 ```
 
-- Editar a board, para considerar os pinos I2C corretos (ver TODO)
+- Edit the file board in Blinka, to use the correct I2C pin (TODO)
   
 `cd .env/lib/python3.11/site-packages/adafruit_blinka/microcontroller/rockchip/rk3328/`
 
-- Editar o arquivo pin.py
+- Edit the file pin.py
 
 ```
 # I2C
@@ -252,7 +251,7 @@ i2cPorts = ((0, I2C0_SCL, I2C0_SDA),)
 ```
 
 
-### Instalar o circuitpython-ssd1306 
+### Install circuitpython-ssd1306 
 
 OLED 
 
@@ -262,38 +261,38 @@ pip install pillow
 pip install adafruit-circuitpython-ssd1306 
 ```
 
-Para testar, utilize o código [oled.py](Examples/oled.py)
+To test, run the code [oled.py](Examples/oled.py)
 
 `python oled.py`
 
-### Instalar o circuitpython-bmp280
-BMP280 - Temperatura e pressão
+### Install  circuitpython-bmp280
+BMP280 - Pressure and temperature sensor
 
 `pip install adafruit-circuitpython-bmp280`
 
-Para testar, utilize o código [bmptest.py](Examples/bmptest.py)
+To test, run the code [bmptest.py](Examples/bmptest.py)
 
 `python bmptest.py`
 
 
-- Leitura dos dados do BMP e apresentando no display
+- Example, reading the data from BMP280 and showing in the OLED display
  
-Código [displaybmp.py](Examples/displaybmp.py)
+Code [displaybmp.py](Examples/displaybmp.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/displaybmp.jpg" width="300" height="300">
 
-### Enviando dados para a nuvem (Thingspeak)
-Criar um canal no [Thingspeak](https://thingspeak.mathworks.com/) 
+### Sending data to Internet (Thingspeak)
+Create a channel in the [Thingspeak](https://thingspeak.mathworks.com/) 
 
-Código [displaybmp_thingspeak.py](Examples/displaybmp_thinkspeak.py)
+Code [displaybmp_thingspeak.py](Examples/displaybmp_thinkspeak.py)
 
 <img src="https://github.com/msoyamada/XPlus_GPIO/blob/main/screenshots/thinkspeak.jpg" width="500" height="300">
 
 
-### Leitura da GPIO
-Algumas portas do RK3228 tem resistores pull up ou down que podem ser programados em software. Procurar no datasheet, se é possível programar a porta que o botão está conectado. Caso não seja possível, é necessário colocar um resistor pull up ou pull down no circuito.
+### GPIO Input
+Some RK3228 ports have  pull up or down resistors, that can be configured by software. Take a look in the datasheet, if the port to be used by the button can be configured. In case it is not possible, it will be necessary to use a  pull up ou pull down resistor.
 
-Código [readpin.py](Examples/readpin.py)
+Code [readpin.py](Examples/readpin.py)
 
 
 ```
@@ -321,8 +320,7 @@ while True:
     time.sleep(0.1)
 ```
 
-### Leitura do botão utilizando o componente keypad
-
+### Using the keypad component
 
 ```
 import os
@@ -346,14 +344,14 @@ while True:
         print(event)
 ``` 
 
-# Sugestões
-- Instalando interface gráfica (caso ainda não esteja instalada)
+# Hints
+- Installing the GUI 
 
 `apt install xfce lightdm xorg`
 
-- Interface gráfica no python
+- GUI in python
   
-Existe várias bibliotecas. Uma sugestão é [PySimpleGUI](https://www.pysimplegui.com/) 
+There are many options. For instance [PySimpleGUI](https://www.pysimplegui.com/) 
 
 
 `apt install python3-tk`
@@ -363,28 +361,27 @@ Existe várias bibliotecas. Uma sugestão é [PySimpleGUI](https://www.pysimpleg
 
 
 # NOT WORKING YET
-A biblioteca CircuitPython está funcionando para os dispositivos testados. No entanto, alguns sensores utilizam protocolo proprietário. Por exemplo, o sensor de temperatura e umidade DHT utiliza um protocolo de 1-wire próprio. O protocolo necessita de leitura na faixa dos us (microsegundos), o que em um sistema de tempo compartilhado como o Linux, nem sempre é possível garantir. 
+The CircuitPython is working with the devices used in this tutorial. However, some sensor type uses a proprietary protocol. For instance, the DHT sensor uses a 1-wire proprietary protocol. The protocol requires a time sample in us (microseconds), which in the case of a time sharing OS like Linux, it is hard to guarantee. 
 
 pip install adafruit-circuitpython-dht
 
-Nos testes realizados a maioria das vezes a leitura retorna um erro por falta de dados ([dht.py](Examples/dht.py)). Colocando o scaling_governor no modo performance (frequência máxima de operação) e "pinando" a execução em um núcleo específico, algumas leituras foram bem sucedidas (menos de 10%). Isso sugere que o problema está no desempenho do SoC.
+In the tests performed, in most of cases the reading returns a error due to missing bits ([dht.py](Examples/dht.py)). Putting the scaling_governor in performance mode (maximum processor frequency), some readings were ok (about 10%). In this case the SoC performance is the problem.
 
 ```
 cd /sys/devices/system/cpu/cpu1/cpufreq
 echo performance > scaling_governor
 ```
 
-Executando no core 1
+Pinning the execution in the core 0x2
 
 `taskset 0x2 python dht.py`
 
 
 
 # TODO
-- Criar o proprio board e chip para a TVBOX no Blinka, facilitando o mapeamento dos pinos e sem a necessidade de alterar o mapeamento de uma placa diferente. Vai necessitar alterar o código do pacote adafruit-platformdetector.
-- Fazer testes com outros dispositivos como botões, interrupções, etc
-- Melhorar o código do DHT (possivelmente utilizando a linguagem C)  
-- Mapear o framework Arduino para a placa (vale a pena ) ?  
+- Create the board and chip for the TVBOX in Blinka, easing the pin mapping. It will be required to cbhange the code in the adafruit-platformdetector library.
+- Try to optimize the DHT code (maybe using C)  
+- Map the Arduino framework for the TVBox  
 
 
 
