@@ -11,17 +11,17 @@ Ciência da Computação - Campus Cascavel
 # Install the Armbian using the multitool
 RK322x tvbox image: https://armbian.hosthatch.com/archive/rk322x-box/archive/
 
-*In this test the Armbian_24.11_Rk322x-box_bookworm was used (probably it will work in the newer version)
+*In this test the Armbian_24.11_Rk322x-box_bookworm was used (Newer versions may also work)
 
 # TVBox  In XPlus
 Specs: SoC RK3229 (4 cores, ARM-V7), 2GB RAM, 8GB Flash)
 ![screenshot](inxplus.jpeg)
 
 # RK3229 GPIO 
-It has 4 GPIO controllers, each one has 32 pins (128 pins in the total). Some pins are predefined to be used in the peripheral access like flash, MMC, Wifi, HDMI etc. 
+The RK3229 features 4 GPIO controllers with 32 pins each (128 total). Many are used for  peripherals like flash, MMC, Wifi, HDMI etc. 
 Based on the work developed in the  Instituto Federal de Goiás - Campus Goiânia by Mateus Morais Aguirre and Prof. Dr. Claudio Afonso Fleury, a search for IO ports was performed using the script  [testgpio.py](Examples/testgpio.py)).
 
-In this board, some GPIO ports are detected as presented in the Table below. 
+Detected GPIO 
 
 | GPIO          | Descrição     |
 | ------------- | ------------- |
@@ -38,11 +38,17 @@ In this board, some GPIO ports are detected as presented in the Table below.
 |102 |	GPIO3_A6/UART1_RTSN|
 |103 |	GPIO3_A7/UART1_CTSN|
 
-*The MMC1 ports can be used because the board used only the MMC0 controller for the SD card slot. The pins placement in the board is presented below.
+*Note: The MMC1 ports can be used because the board used only the MMC0 controller for the SD card slot. The pins placement in the board is presented below.
 ![screenshot](Xplus_INschematic.png)
 
-To access the GPIO enemeled wires (often used in the jump on pcb) are used to facilitate the access to the ports. The GPIO 41 and 42 are soldered directly in the board, thanks to the holes already available in the board. To easing the access to the GPIO ports, a set of unused holes in the board was used (in the board, the holes are connected in a place where there is no soldered CI). In this test, only the pins 96 e 99 were soldered, and the others can be soldered as necessary. 
-The GND and 3V3 pins are alse identified to power the external circuits.
+# Physical Access to GPIO Pins
+
+- GPIO41 and GPIO42 have pre-drilled holes for easy soldering.
+
+- Other GPIOs (e.g., 96 and 99) were accessed via enamel wires and unused holes.
+
+- GND and 3.3V power pins are also identified on the board.
+
 
 ![screenshot](xplus_pins.jpg)
 
@@ -52,7 +58,7 @@ The GND and 3V3 pins are alse identified to power the external circuits.
 
 
 # Software
-To access the GPIO, the sysfs can be used:
+To access the GPIO(via sysfs):
 
 `cd /sys/class/gpio`
 
